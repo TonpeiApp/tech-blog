@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sansg-serif;
+}
+
+/* 見出し (h2) の下の余白を小さくして、hrとの間隔を縮める */
+.prose h2 {
+  margin-bottom: 0;
+}
+
+.prose p {
+  margin: 0;
+}
+
+/* hrの上と下の余白を設定 */
+.prose hr {
+  margin-top: 0; /* hrの上の余白をゼロに */
+  margin-bottom: 0.5rem; /* hrの下の余白は少し残す */
+}
+
+.toc {
+  padding: 16px;
+  background-color: #b40303;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
