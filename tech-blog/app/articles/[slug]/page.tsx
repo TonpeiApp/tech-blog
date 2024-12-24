@@ -37,8 +37,6 @@ export default async function Article({ params }: Props) {
   const article = await getArticleBySlug(slug);
   if (!article) return;
 
-  console.log('プロフィール画像', article.author.profileImage.src);
-
   const headings: string[] = [];
 
   const $ = load(article.contents2);
@@ -99,6 +97,19 @@ export default async function Article({ params }: Props) {
               {/* 著者名 */}
               <p className="text-base font-bold text-gray-800 mb-2">{article.author.fullName}</p>
             </div>
+            {/* Tag */}
+            <div className="flex space-x-2 text-xs">
+              {article.tags.length > 0 ? (
+                article.tags.map((tag) => (
+                  <p key={tag._id} className="text-gray-700 bg-gray-200 rounded px-2 py-1">
+                    {tag.name}
+                  </p>
+                ))
+              ) : (
+                <p className="text-gray-700 bg-gray-200 rounded px-2 py-1">No Tags</p>
+              )}
+            </div>
+
             {/* 作成日 */}
             <time className="mt-3 text-sm text-gray-400 flex space-x-6">
               <div className="flex items-center space-x-2">
