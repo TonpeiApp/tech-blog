@@ -17,13 +17,6 @@ const tagBackgrounds: { [key: string]: string } = {
   非エンジニア: 'from-purple-200 via-purple-300 to-pink-200', // 控えめな紫ピンクグラデーション
 };
 
-const tagImages: { [key: string]: string } = {
-  フロントエンド: '/front-end.png',
-  バックエンド: '/back-end.png',
-  インフラ: '/icon.png',
-  非エンジニア: '/icon.png',
-};
-
 type HomeProps = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
@@ -41,7 +34,6 @@ export default async function Home({ searchParams }: HomeProps) {
         <h1 className="text-2xl lg:text-4xl font-bold text-center text-gray-800 mb-8">
           とんペディア BLOG
         </h1>
-
         {/* 記事リスト */}
         <div className="sm:flex sm:justify-center">
           <div className="grid grid-cols-1 lg:w-[70%] lg:grid-cols-2 gap-8">
@@ -54,9 +46,12 @@ export default async function Home({ searchParams }: HomeProps) {
                 >
                   {/* 左側: タイトルとサブタイトル */}
                   <div className="flex-1">
-                    <p className="font-mono text-xl text-gray-600 mb-4 absolute top-10 left-4">
-                      tompedia TECH BLOG
-                    </p>
+                    <div className="absolute top-10 left-4 flex items-center">
+                      <div>
+                        <Image src={'/icon.png'} alt="" width={30} height={30} className="mr-2" />
+                      </div>
+                      <p className="font-mono text-xl text-gray-600">tompedia TECH BLOG</p>
+                    </div>
                     <Link
                       href={`articles/${article.slug}`}
                       className="px-1 text-2xl font-semibold text-gray-600 hover:underline absolute top-28 left-2"
@@ -67,9 +62,11 @@ export default async function Home({ searchParams }: HomeProps) {
 
                   {/* 右側: アイコン画像 */}
                   <div className="w-20 h-20 sm:w-20 sm:h-20 flex-shrink-0 absolute top-2 right-2">
-                    <img
-                      src={tagImages[article.tags[0]?.name] || '/images/default-icon.png'}
-                      alt={`${article.tags[0]?.name || 'default'} icon`}
+                    <Image
+                      src={article.coverImage?.src || '/icon.png'}
+                      alt={article.coverImage ? 'Cover Image' : 'Default Icon'}
+                      width={80} // 必要に応じてサイズを調整
+                      height={80}
                       className="w-full h-full object-cover rounded-full"
                     />
                   </div>

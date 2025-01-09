@@ -62,6 +62,8 @@ export default async function Article({ params }: Props) {
   });
   article.contents2 = $.html();
 
+  console.log('カバー画像', article.coverImage.src);
+
   return (
     <main className="bg-gray-100 min-h-screen">
       <div className="container mx-auto px-4 py-8 flex flex-col lg:flex-row space-y-8 lg:space-x-16 lg:space-y-0">
