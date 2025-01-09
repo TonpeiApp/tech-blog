@@ -5,13 +5,14 @@ import type { Article } from '@/types/article';
 import { Author } from '@/types/author';
 import { Tag } from '@/types/tag';
 
-const client = createClient({
+export const client = createClient({
   spaceUid: process.env.NEWT_SPACE_UID + '',
   token: process.env.NEWT_CDN_API_TOKEN + '',
   apiType: 'cdn',
 });
 
-export const getArticles = cache(async () => {
+export const getArticles = cache(async (page: number, pageSize: number) => {
+  console.log('現在のページ', page);
   const { items } = await client.getContents<Article>({
     appUid: 'blog',
     modelUid: 'article',
@@ -24,12 +25,15 @@ export const getArticles = cache(async () => {
         'contents2',
         'author',
         'tags',
+        'coverImage',
         '_sys.createdAt',
         '_sys.updatedAt',
       ],
       body: {
         fmt: 'text',
       },
+      limit: pageSize,
+      skip: (page - 1) * pageSize,
     },
   });
   return items;
@@ -49,6 +53,7 @@ export const getArticleBySlug = cache(async (slug: string) => {
         'contents2',
         'author',
         'tags',
+        'coverImage',
         '_sys.createdAt',
         '_sys.updatedAt',
       ],

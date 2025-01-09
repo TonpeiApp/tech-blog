@@ -1,6 +1,6 @@
 import { load } from 'cheerio';
 import hljs from 'highlight.js';
-import { getArticles, getArticleBySlug } from '@/lib/newt';
+import { getArticleBySlug } from '@/lib/newt';
 import type { Metadata } from 'next';
 import type { Article } from '@/types/article';
 import 'highlight.js/styles/github-dark.css';
@@ -13,14 +13,6 @@ type Props = {
     slug: string;
   }>;
 };
-
-export async function generateStaticParams() {
-  const articles = await getArticles();
-  return articles.map((article) => ({
-    slug: article.slug,
-  }));
-}
-export const dynamicParams = false;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;

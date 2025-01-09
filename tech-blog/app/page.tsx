@@ -3,17 +3,37 @@ import Link from 'next/link';
 import { getArticles } from '@/lib/newt';
 import type { Metadata } from 'next';
 import { format } from 'date-fns';
-import Pagination from './Pagination';
+import { PaginationWithLinks } from '@/components/ui/pagination-with-links';
 
 export const metadata: Metadata = {
   title: 'Newt・Next.jsブログ',
   description: 'NewtとNext.jsを利用したブログです',
 };
 
-export default async function Home() {
-  const articles = await getArticles();
-  const totalPages = 10; // 仮の値
-  const currentPage = 1; // 仮の値
+const tagBackgrounds: { [key: string]: string } = {
+  フロントエンド: 'from-green-200 via-green-300 to-green-400', // ソフトなグリーングラデーション
+  バックエンド: 'from-blue-200 via-blue-300 to-indigo-300', // 落ち着いた青のグラデーション
+  インフラ: 'from-gray-200 via-gray-300 to-gray-400', // 上品なグレーグラデーション
+  非エンジニア: 'from-purple-200 via-purple-300 to-pink-200', // 控えめな紫ピンクグラデーション
+};
+
+const tagImages: { [key: string]: string } = {
+  フロントエンド: '/front-end.png',
+  バックエンド: '/back-end.png',
+  インフラ: '/icon.png',
+  非エンジニア: '/icon.png',
+};
+
+type HomeProps = {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
+
+export default async function Home({ searchParams }: HomeProps) {
+  const q = await searchParams;
+  const currentPage = parseInt((q.page as string) || '1');
+  const pageSize = 10;
+  const articles = await getArticles(currentPage, pageSize);
+  const totalCount = 100;
 
   return (
     <main className="bg-white py-8">
@@ -23,20 +43,36 @@ export default async function Home() {
         </h1>
 
         {/* 記事リスト */}
-        <div className="flex justify-center">
+        <div className="sm:flex sm:justify-center">
           <div className="grid grid-cols-1 lg:w-[70%] lg:grid-cols-2 gap-8">
             {articles.map((article) => (
-              <div key={article._id} className="flex flex-col">
-                <p>{article.tags[0].name}</p>
-                <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-6 flex flex-col justify-between h-40">
-                  <p className="font-mono text-lg text-white mb-4">tompedia TECH BLOG</p>
-                  {/* 記事タイトル */}
-                  <Link
-                    href={`articles/${article.slug}`}
-                    className="text-2xl font-semibold text-white"
-                  >
-                    {article.title}
-                  </Link>
+              <div key={article._id} className="flex flex-col relative w-full">
+                <div
+                  className={`bg-gradient-to-r ${
+                    tagBackgrounds[article.tags[0]?.name] || 'from-gray-500 to-gray-700'
+                  } p-6 flex flex-col sm:flex-row justify-between items-center h-52 relative w-full`}
+                >
+                  {/* 左側: タイトルとサブタイトル */}
+                  <div className="flex-1">
+                    <p className="font-mono text-xl text-gray-600 mb-4 absolute top-10 left-4">
+                      tompedia TECH BLOG
+                    </p>
+                    <Link
+                      href={`articles/${article.slug}`}
+                      className="px-1 text-2xl font-semibold text-gray-600 hover:underline absolute top-28 left-2"
+                    >
+                      {article.title}
+                    </Link>
+                  </div>
+
+                  {/* 右側: アイコン画像 */}
+                  <div className="w-20 h-20 sm:w-20 sm:h-20 flex-shrink-0 absolute top-2 right-2">
+                    <img
+                      src={tagImages[article.tags[0]?.name] || '/images/default-icon.png'}
+                      alt={`${article.tags[0]?.name || 'default'} icon`}
+                      className="w-full h-full object-cover rounded-full"
+                    />
+                  </div>
                 </div>
                 <div className="p-5">
                   <div className="flex items-center mb-4">
@@ -86,9 +122,10 @@ export default async function Home() {
           </div>
         </div>
       </div>
-
       {/* Pagination */}
-      <Pagination currentPage={currentPage} totalPages={totalPages} />
+      <div className="pt-10">
+        <PaginationWithLinks page={currentPage} pageSize={pageSize} totalCount={totalCount} />
+      </div>
     </main>
   );
 }
