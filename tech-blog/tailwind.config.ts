@@ -10,7 +10,7 @@ export default {
   theme: {
     extend: {
       spacing: {
-        28: '6.0rem',
+        28: '7.5rem',
       },
       colors: {
         background: 'hsl(var(--background))',

@@ -69,7 +69,7 @@ export default async function Article({ params }: Props) {
       <div className="container mx-auto px-4 py-8 flex flex-col lg:flex-row space-y-8 lg:space-x-16 lg:space-y-0">
         {/* 左端の共有セクション */}
         <ShareButtons />
-        <div className="flex-1 lg:w-[65%] bg-white p-4">
+        <div className="flex-1 lg:w-[65%] bg-white shadow-lg rounded-lg p-4">
           <div className="mb-8 pb-4">
             {/* プロフィール画像と名前の表示 */}
             <div className="flex items-center mb-4">

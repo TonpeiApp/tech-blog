@@ -11,10 +11,10 @@ export const metadata: Metadata = {
 };
 
 const tagBackgrounds: { [key: string]: string } = {
-  フロントエンド: 'from-green-200 via-green-300 to-green-400', // ソフトなグリーングラデーション
-  バックエンド: 'from-blue-200 via-blue-300 to-indigo-300', // 落ち着いた青のグラデーション
-  インフラ: 'from-gray-200 via-gray-300 to-gray-400', // 上品なグレーグラデーション
-  非エンジニア: 'from-purple-200 via-purple-300 to-pink-200', // 控えめな紫ピンクグラデーション
+  フロントエンド: 'from-green-400 via-green-500 to-green-600',
+  バックエンド: 'from-blue-400 via-blue-500 to-indigo-600',
+  インフラ: 'from-gray-400 via-gray-500 to-gray-600',
+  非エンジニア: 'from-yellow-400 via-yellow-500 to-orange-500',
 };
 
 type HomeProps = {
@@ -42,7 +42,7 @@ export default async function Home({ searchParams }: HomeProps) {
                 <div
                   className={`bg-gradient-to-r ${
                     tagBackgrounds[article.tags[0]?.name] || 'from-gray-500 to-gray-700'
-                  } p-6 flex flex-col sm:flex-row justify-between items-center h-52 relative w-full`}
+                  } p-6 flex flex-col sm:flex-row justify-between items-center h-60 relative w-full`}
                 >
                   {/* 左側: タイトルとサブタイトル */}
                   <div className="flex-1">
@@ -50,18 +50,18 @@ export default async function Home({ searchParams }: HomeProps) {
                       <div>
                         <Image src={'/icon.png'} alt="" width={30} height={30} className="mr-2" />
                       </div>
-                      <p className="font-mono text-xl text-gray-600">tompedia TECH BLOG</p>
+                      <p className="font-mono text-xl text-white">tompedia TECH BLOG</p>
                     </div>
                     <Link
                       href={`articles/${article.slug}`}
-                      className="px-1 text-2xl font-semibold text-gray-600 hover:underline absolute top-28 left-2"
+                      className="px-4 text-2xl font-semibold text-white hover:underline absolute top-28 left-2"
                     >
                       {article.title}
                     </Link>
                   </div>
 
                   {/* 右側: アイコン画像 */}
-                  <div className="w-20 h-20 sm:w-20 sm:h-20 flex-shrink-0 absolute top-2 right-2">
+                  <div className="w-20 h-20 sm:w-20 sm:h-20 flex-shrink-0 absolute top-3 right-3">
                     <Image
                       src={article.coverImage?.src || '/icon.png'}
                       alt={article.coverImage ? 'Cover Image' : 'Default Icon'}
