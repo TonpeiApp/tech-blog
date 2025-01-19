@@ -11,8 +11,35 @@ export const client = createClient({
   apiType: 'cdn',
 });
 
+export const searchArticles = cache(async (keyword: string) => {
+  const { items } = await client.getContents<Article>({
+    appUid: 'blog',
+    modelUid: 'article',
+    query: {
+      depth: 2,
+      title: {
+        match: keyword,
+      },
+      select: [
+        '_id',
+        'title',
+        'slug',
+        'contents2',
+        'author',
+        'tags',
+        'coverImage',
+        '_sys.createdAt',
+        '_sys.updatedAt',
+      ],
+      body: {
+        fmt: 'text',
+      },
+    },
+  });
+  return items;
+});
+
 export const getArticles = cache(async (page: number, pageSize: number) => {
-  console.log('現在のページ', page);
   const { items } = await client.getContents<Article>({
     appUid: 'blog',
     modelUid: 'article',
