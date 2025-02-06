@@ -26,7 +26,7 @@ export default async function Home({ searchParams }: HomeProps) {
   const currentPage = parseInt((q.page as string) || '1');
   const pageSize = 10;
   const articles = await getArticles(currentPage, pageSize);
-  const totalCount = 100;
+  const totalCount = articles.total;
 
   return (
     <main className="bg-white py-8">
@@ -37,7 +37,7 @@ export default async function Home({ searchParams }: HomeProps) {
         {/* 記事リスト */}
         <div className="sm:flex sm:justify-center">
           <div className="grid grid-cols-1 lg:w-[70%] lg:grid-cols-2 gap-8">
-            {articles.map((article) => (
+            {articles.items.map((article) => (
               <div key={article._id} className="flex flex-col relative w-full">
                 <div
                   className={`bg-gradient-to-r ${

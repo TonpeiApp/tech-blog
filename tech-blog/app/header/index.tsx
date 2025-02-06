@@ -32,7 +32,13 @@ export default function Header() {
         {/* PC画面用：ナビゲーションリンク */}
         <div className="hidden lg:flex lg:gap-x-12 justify-center flex-grow">
           {navigation.map((item) => (
-            <a key={item.name} href={item.href} className="text-sm/6 font-semibold text-gray-900">
+            <a
+              key={item.name}
+              href={item.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm/6 font-semibold text-gray-900"
+            >
               {item.name}
             </a>
           ))}

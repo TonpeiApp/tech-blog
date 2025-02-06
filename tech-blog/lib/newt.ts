@@ -11,8 +11,8 @@ export const client = createClient({
   apiType: 'cdn',
 });
 
-export const searchArticles = cache(async (keyword: string) => {
-  const { items } = await client.getContents<Article>({
+export const searchArticles = cache(async (keyword: string, page: number, pageSize: number) => {
+  const { items, total } = await client.getContents<Article>({
     appUid: 'blog',
     modelUid: 'article',
     query: {
@@ -34,13 +34,15 @@ export const searchArticles = cache(async (keyword: string) => {
       body: {
         fmt: 'text',
       },
+      limit: pageSize,
+      skip: (page - 1) * pageSize,
     },
   });
-  return items;
+  return { items, total };
 });
 
 export const getArticles = cache(async (page: number, pageSize: number) => {
-  const { items } = await client.getContents<Article>({
+  const { items, total } = await client.getContents<Article>({
     appUid: 'blog',
     modelUid: 'article',
     query: {
@@ -63,7 +65,7 @@ export const getArticles = cache(async (page: number, pageSize: number) => {
       skip: (page - 1) * pageSize,
     },
   });
-  return items;
+  return { items, total };
 });
 
 export const getArticleBySlug = cache(async (slug: string) => {
@@ -153,3 +155,58 @@ export const getImage = cache(async () => {
   });
   return items;
 });
+
+// 全記事を取得する関数を追加
+export const getAllArticles = cache(async () => {
+  const { items } = await client.getContents<Article>({
+    appUid: 'blog',
+    modelUid: 'article',
+    query: {
+      depth: 2,
+      select: [
+        '_id',
+        'title',
+        'slug',
+        'contents2',
+        'author',
+        'tags',
+        'coverImage',
+        '_sys.createdAt',
+        '_sys.updatedAt',
+      ],
+    },
+  });
+  return items;
+});
+
+// タグIDに基づいて関連記事を取得する関数を追加
+export const getRelatedArticlesByTags = cache(
+  async (tagIds: string[], currentArticleId: string, limit: number = 5) => {
+    const { items } = await client.getContents<Article>({
+      appUid: 'blog',
+      modelUid: 'article',
+      query: {
+        depth: 2,
+        select: [
+          '_id',
+          'title',
+          'slug',
+          'contents2',
+          'author',
+          'tags',
+          'coverImage',
+          '_sys.createdAt',
+          '_sys.updatedAt',
+        ],
+        tags: {
+          in: tagIds,
+        },
+        _id: {
+          ne: currentArticleId, // 現在の記事を除外
+        },
+        limit,
+      },
+    });
+    return items;
+  }
+);
