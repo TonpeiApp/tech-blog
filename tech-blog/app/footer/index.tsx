@@ -2,10 +2,6 @@ const navigation = {
   main: [
     { name: 'HP', href: 'https://info.tompedia.jp/' },
     { name: 'Blog', href: '/' },
-    { name: 'Jobs', href: '#' },
-    { name: 'Press', href: '#' },
-    { name: 'Accessibility', href: '#' },
-    { name: 'Partners', href: '#' },
   ],
   social: [
     {
@@ -48,8 +44,8 @@ const navigation = {
 
 export default function Footer() {
   return (
-    <footer className="bg-white">
-      <div className="mx-auto max-w-7xl overflow-hidden px-6 py-20 sm:py-24 lg:px-8">
+    <footer className="bg-white border-t-2 border-gray-200 shadow-sm bg-white/90 backdrop-blur-sm transition-all duration-300 hover:shadow-md">
+      <div className="mx-auto max-w-7xl overflow-hidden px-6 py-20 sm:py-10 lg:px-8">
         <nav
           aria-label="Footer"
           className="-mb-6 flex flex-wrap justify-center gap-x-12 gap-y-3 text-sm/6"
@@ -60,7 +56,7 @@ export default function Footer() {
             </a>
           ))}
         </nav>
-        <div className="mt-16 flex justify-center gap-x-10">
+        <div className="mt-10 flex justify-center gap-x-10">
           {navigation.social.map((item) => (
             <a key={item.name} href={item.href} className="text-gray-600 hover:text-gray-800">
               <span className="sr-only">{item.name}</span>

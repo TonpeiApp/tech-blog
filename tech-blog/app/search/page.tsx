@@ -27,7 +27,7 @@ const Page: NextPage<PageProps> = async ({ searchParams }) => {
     <main className="bg-white py-8">
       <div className="container mx-auto">
         <h1 className="text-2xl lg:text-4xl font-bold text-center text-gray-800 mb-8">
-          とんペディア BLOG
+          「{q}」の検索結果
         </h1>
         {/* 記事リスト */}
         <div className="sm:flex sm:justify-center">

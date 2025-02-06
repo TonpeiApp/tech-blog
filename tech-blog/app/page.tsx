@@ -36,7 +36,7 @@ export default async function Home({ searchParams }: HomeProps) {
         </h1>
         {/* 記事リスト */}
         <div className="sm:flex sm:justify-center">
-          <div className="grid grid-cols-1 lg:w-[70%] lg:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 lg:w-[70%]  w-full lg:grid-cols-2 gap-8">
             {articles.items.map((article) => (
               <div key={article._id} className="flex flex-col relative w-full">
                 <div

@@ -17,7 +17,7 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="bg-white">
+    <header className="bg-white border-b-2 border-gray-200 backdrop-blur-sm bg-white/900 transition-all duration-300 hover:shadow-md">
       <nav
         aria-label="Global"
         className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
@@ -45,27 +45,44 @@ export default function Header() {
         </div>
 
         {/* スマホ画面用：検索フォーム中央揃え */}
-        <div className="flex lg:hidden items-center justify-center space-x-4">
+        <div className="flex lg:hidden items-center justify-center w-[50%]">
           <form
             action={async (data: FormData) => {
               const keyword = data.get('keyword') as string;
-
               const params = new URLSearchParams();
               params.append('q', keyword);
-
               redirect(`/search?${params.toString()}`);
             }}
-            className="flex items-center space-x-2 border border-gray-300 rounded-md p-2 shadow-sm max-w-xs"
+            className="relative w-full group"
           >
-            <Input
-              autoComplete="off"
-              name="keyword"
-              className="flex-grow p-2 text-sm border-none focus:ring-0"
-              placeholder="検索..."
+            <div className="relative flex items-center w-full">
+              <Input
+                autoComplete="off"
+                name="keyword"
+                className="w-full pl-4 pr-12 py-3 bg-transparent border-2 border-gray-200 
+                        rounded-lg transition-all duration-300 ease-in-out
+                        focus:border-gray-900 focus:ring-0 focus:outline-none
+                        placeholder:text-gray-400 text-gray-900"
+                placeholder="検索..."
+              />
+              <Button
+                type="submit"
+                className="absolute right-2 p-2 rounded-md 
+                        bg-transparent hover:bg-gray-100 
+                        transition-all duration-300 ease-in-out
+                        focus:outline-none focus:ring-2 focus:ring-gray-900"
+              >
+                <Search
+                  size={20}
+                  className="text-gray-500 group-hover:text-gray-900 
+                            transition-colors duration-300"
+                />
+              </Button>
+            </div>
+            <div
+              className="absolute bottom-0 left-0 w-0 h-0.5 bg-gray-900 
+                        group-hover:w-full transition-all duration-300 ease-in-out"
             />
-            <Button className="bg-blue-500 text-white rounded-md px-3 py-2 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
-              <Search size={20} />
-            </Button>
           </form>
         </div>
 
@@ -82,27 +99,44 @@ export default function Header() {
         </div>
 
         {/* PC画面用：検索フォームを右側に配置 */}
-        <div className="hidden lg:flex items-center justify-end space-x-4">
+        <div className="hidden lg:flex items-center justify-end space-x-4 w-[25%]">
           <form
             action={async (data: FormData) => {
               const keyword = data.get('keyword') as string;
-
               const params = new URLSearchParams();
               params.append('q', keyword);
-
               redirect(`/search?${params.toString()}`);
             }}
-            className="flex items-center space-x-2 border border-gray-300 rounded-md p-2 shadow-sm"
+            className="relative group w-96"
           >
-            <Input
-              autoComplete="off"
-              name="keyword"
-              className="p-2 text-sm border-none focus:ring-0"
-              placeholder="検索..."
+            <div className="relative flex items-center w-full">
+              <Input
+                autoComplete="off"
+                name="keyword"
+                className="w-full pl-4 pr-12 py-2.5 bg-transparent border-2 border-gray-200 
+                        rounded-lg transition-all duration-300 ease-in-out
+                        focus:border-gray-900 focus:ring-0 focus:outline-none
+                        placeholder:text-gray-400 text-gray-900 text-sm"
+                placeholder="検索..."
+              />
+              <Button
+                type="submit"
+                className="absolute right-2 p-1.5 rounded-md 
+                        bg-transparent hover:bg-gray-100 
+                        transition-all duration-300 ease-in-out
+                        focus:outline-none focus:ring-2 focus:ring-gray-900"
+              >
+                <Search
+                  size={18}
+                  className="text-gray-500 group-hover:text-gray-900 
+                            transition-colors duration-300"
+                />
+              </Button>
+            </div>
+            <div
+              className="absolute bottom-0 left-0 w-0 h-0.5 bg-gray-900 
+                        group-hover:w-full transition-all duration-300 ease-in-out"
             />
-            <Button className="bg-blue-500 text-white rounded-md px-3 py-2 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
-              <Search size={20} />
-            </Button>
           </form>
         </div>
       </nav>
