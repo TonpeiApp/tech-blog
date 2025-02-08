@@ -9,6 +9,7 @@ import Image from 'next/image';
 import { format } from 'date-fns';
 import Link from 'next/link';
 import { addCopyButtonsToCodeBlocks } from '@/utils/codeBlock';
+import Script from 'next/script';
 
 type Props = {
   params: Promise<{
@@ -167,103 +168,96 @@ export default async function Article({ params }: Props) {
   // 最終的なHTMLを生成
   article.contents2 = $.html();
   return (
-    <main className="bg-gray-100 min-h-screen">
-      <div className="container mx-auto px-4 py-8 flex flex-col lg:flex-row space-y-8 lg:space-x-8 lg:space-y-0">
-        {/* 左端の共有セクション */}
-        <ShareButtons />
+    <>
+      <Script id="copy-code" strategy="afterInteractive">
+        {`
+          window.copyCodeToClipboard = function(button) {
+            const codeElement = button.parentElement.querySelector('code');
+            const textToCopy = codeElement.textContent;
+            
+            navigator.clipboard.writeText(textToCopy)
+              .then(() => {
+                // Success feedback
+                button.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>';
+                setTimeout(() => {
+                  button.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+                }, 2000);
+              })
+              .catch(err => console.error('Failed to copy:', err));
+          };
+        `}
+      </Script>
+      <main className="bg-gray-100 min-h-screen">
+        <div className="container mx-auto px-4 py-8 flex flex-col lg:flex-row space-y-8 lg:space-x-8 lg:space-y-0">
+          {/* 左端の共有セクション */}
+          <ShareButtons />
 
-        {/* メインコンテンツ */}
-        <div className="flex-1 lg:w-[65%]">
-          {/* 記事本文 */}
-          <div className="bg-white shadow-lg rounded-lg p-4 mb-8">
-            <div className="mb-8 pb-4">
-              {/* プロフィール画像と名前の表示 */}
-              <div className="flex items-center mb-4">
-                <div className="relative w-10 h-10 mr-3">
-                  {article.author.profileImage ? (
-                    <Image
-                      src={article.author.profileImage.src}
-                      alt={`${article.author.fullName}のプロフィール画像`}
-                      layout="fill"
-                      className="rounded-full object-cover"
-                    />
+          {/* メインコンテンツ */}
+          <div className="flex-1 lg:w-[65%]">
+            {/* 記事本文 */}
+            <div className="bg-white shadow-lg rounded-lg p-4 mb-8">
+              <div className="mb-8 pb-4">
+                {/* プロフィール画像と名前の表示 */}
+                <div className="flex items-center mb-4">
+                  <div className="relative w-10 h-10 mr-3">
+                    {article.author.profileImage ? (
+                      <Image
+                        src={article.author.profileImage.src}
+                        alt={`${article.author.fullName}のプロフィール画像`}
+                        layout="fill"
+                        className="rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="flex items-center justify-center w-full h-full text-gray-500 bg-gray-300 rounded-full">
+                        No Image
+                      </div>
+                    )}
+                  </div>
+                  <p className="text-base font-bold text-gray-800 mb-2">
+                    {article.author.fullName}
+                  </p>
+                </div>
+
+                {/* Tag */}
+                <div className="flex space-x-2 text-xs">
+                  {article.tags.length > 0 ? (
+                    article.tags.map((tag) => (
+                      <p key={tag._id} className="text-gray-700 bg-gray-200 rounded px-2 py-1">
+                        {tag.name}
+                      </p>
+                    ))
                   ) : (
-                    <div className="flex items-center justify-center w-full h-full text-gray-500 bg-gray-300 rounded-full">
-                      No Image
-                    </div>
+                    <p className="text-gray-700 bg-gray-200 rounded px-2 py-1">No Tags</p>
                   )}
                 </div>
-                <p className="text-base font-bold text-gray-800 mb-2">{article.author.fullName}</p>
+
+                {/* 作成日 */}
+                <time className="mt-3 text-xs lg:text-base text-gray-400 flex space-x-6">
+                  <div className="flex items-center space-x-2">
+                    <p className="font-medium">投稿日</p>
+                    <p>{format(new Date(article._sys.createdAt), 'yyyy年MM月dd日')}</p>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <p className="font-medium">最終更新日</p>
+                    <p>{format(new Date(article._sys.updatedAt), 'yyyy年MM月dd日')}</p>
+                  </div>
+                </time>
+
+                {/* 記事タイトル */}
+                <h1 className="mt-3 text-3xl sm:text-4xl font-bold text-gray-800">
+                  {article.title}
+                </h1>
               </div>
 
-              {/* Tag */}
-              <div className="flex space-x-2 text-xs">
-                {article.tags.length > 0 ? (
-                  article.tags.map((tag) => (
-                    <p key={tag._id} className="text-gray-700 bg-gray-200 rounded px-2 py-1">
-                      {tag.name}
-                    </p>
-                  ))
-                ) : (
-                  <p className="text-gray-700 bg-gray-200 rounded px-2 py-1">No Tags</p>
-                )}
-              </div>
-
-              {/* 作成日 */}
-              <time className="mt-3 text-xs lg:text-base text-gray-400 flex space-x-6">
-                <div className="flex items-center space-x-2">
-                  <p className="font-medium">投稿日</p>
-                  <p>{format(new Date(article._sys.createdAt), 'yyyy年MM月dd日')}</p>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <p className="font-medium">最終更新日</p>
-                  <p>{format(new Date(article._sys.updatedAt), 'yyyy年MM月dd日')}</p>
-                </div>
-              </time>
-
-              {/* 記事タイトル */}
-              <h1 className="mt-3 text-3xl sm:text-4xl font-bold text-gray-800">{article.title}</h1>
-            </div>
-
-            {/* 目次セクション（モバイル） */}
-            <div className="lg:hidden mb-8">
-              <h2 className="text-2xl font-semibold text-gray-800">目次</h2>
-              <ul className="mt-4 space-y-2">
-                {headings.map((text, index) => (
-                  <li key={index}>
-                    <a href={`#${text}`} className="text-purple-800 duration-100 hover:bg-gray-200">
-                      {text}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* 記事内容 */}
-            <section
-              className="prose prose-lg max-w-none leading-relaxed text-gray-800"
-              dangerouslySetInnerHTML={{ __html: article.contents2 }}
-            />
-          </div>
-          {/* 関連記事 */}
-          <div className="lg:hidden">
-            <RelatedArticlesSection articles={relatedArticles} />
-          </div>
-        </div>
-
-        {/* 右サイドバー（PC画面） */}
-        <div className="w-max">
-          {/* 目次の表示 */}
-          <aside className="hidden lg:block flex-shrink-0 sticky top-3">
-            <div className="flex flex-col items-center space-y-4">
-              <div className="bg-white p-4 shadow-md rounded-md w-72">
-                <h2 className="text-xl font-semibold text-gray-800">目次</h2>
+              {/* 目次セクション（モバイル） */}
+              <div className="lg:hidden mb-8">
+                <h2 className="text-2xl font-semibold text-gray-800">目次</h2>
                 <ul className="mt-4 space-y-2">
                   {headings.map((text, index) => (
                     <li key={index}>
                       <a
                         href={`#${text}`}
-                        className="block w-full text-purple-800 duration-100 hover:bg-gray-200"
+                        className="text-purple-800 duration-100 hover:bg-gray-200"
                       >
                         {text}
                       </a>
@@ -271,16 +265,50 @@ export default async function Article({ params }: Props) {
                   ))}
                 </ul>
               </div>
-              {/* 関連記事表示 */}
-              {relatedArticles.length > 0 && (
-                <div className="w-72">
-                  <RelatedArticlesSection articles={relatedArticles} />
-                </div>
-              )}
+
+              {/* 記事内容 */}
+              <section
+                className="prose prose-lg max-w-none leading-relaxed text-gray-800"
+                dangerouslySetInnerHTML={{ __html: article.contents2 }}
+              />
             </div>
-          </aside>
+            {/* 関連記事 */}
+            <div className="lg:hidden">
+              <RelatedArticlesSection articles={relatedArticles} />
+            </div>
+          </div>
+
+          {/* 右サイドバー（PC画面） */}
+          <div className="w-max">
+            {/* 目次の表示 */}
+            <aside className="hidden lg:block flex-shrink-0 sticky top-3">
+              <div className="flex flex-col items-center space-y-4">
+                <div className="bg-white p-4 shadow-md rounded-md w-72">
+                  <h2 className="text-xl font-semibold text-gray-800">目次</h2>
+                  <ul className="mt-4 space-y-2">
+                    {headings.map((text, index) => (
+                      <li key={index}>
+                        <a
+                          href={`#${text}`}
+                          className="block w-full text-purple-800 duration-100 hover:bg-gray-200"
+                        >
+                          {text}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                {/* 関連記事表示 */}
+                {relatedArticles.length > 0 && (
+                  <div className="w-72">
+                    <RelatedArticlesSection articles={relatedArticles} />
+                  </div>
+                )}
+              </div>
+            </aside>
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </>
   );
 }
